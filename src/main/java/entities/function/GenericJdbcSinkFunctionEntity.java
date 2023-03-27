@@ -1,16 +1,17 @@
-package cn.wangz.flink.atlas.agent.entities.function;
+package entities.function;
 
 
-import org.apache.atlas.model.instance.AtlasEntity;
 import org.apache.flink.connector.jdbc.JdbcConnectionOptions;
-import org.apache.flink.connector.jdbc.internal.AbstractJdbcOutputFormat;
+import org.apache.flink.connector.jdbc.internal.JdbcOutputFormat;
 import org.apache.flink.connector.jdbc.internal.GenericJdbcSinkFunction;
 import org.apache.flink.connector.jdbc.internal.connection.JdbcConnectionProvider;
 import org.apache.flink.connector.jdbc.internal.connection.SimpleJdbcConnectionProvider;
 import org.apache.flink.connector.jdbc.internal.options.JdbcDmlOptions;
 
-import cn.wangz.flink.atlas.agent.entities.NodeEntity;
-import cn.wangz.flink.atlas.agent.utils.ClassUtils;
+import entities.NodeEntity;
+import utils.ClassUtils;
+
+import com.cisco.webex.datahub.client.lineage.request.LineageRequest.LineageRequestBuilder;
 
 public class GenericJdbcSinkFunctionEntity extends NodeEntity<GenericJdbcSinkFunction> {
 
@@ -19,13 +20,13 @@ public class GenericJdbcSinkFunctionEntity extends NodeEntity<GenericJdbcSinkFun
     }
 
     @Override
-    public AtlasEntity toEntity() {
+    public void add2Lineage(LineageRequestBuilder builder) {
         GenericJdbcSinkFunction jdbcSinkFunction = this.node;
 
         try {
 
-            AbstractJdbcOutputFormat outputFormat = ClassUtils.getFiledValue(jdbcSinkFunction,
-                    "outputFormat", AbstractJdbcOutputFormat.class);
+            JdbcOutputFormat outputFormat = ClassUtils.getFiledValue(jdbcSinkFunction,
+                    "outputFormat", JdbcOutputFormat.class);
 
             JdbcDmlOptions dmlOptions = null;
             try {
@@ -48,6 +49,5 @@ public class GenericJdbcSinkFunctionEntity extends NodeEntity<GenericJdbcSinkFun
             // TODO
         }
 
-        return null;
     }
 }
